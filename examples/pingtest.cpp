@@ -92,13 +92,13 @@ int main(int argc, char** argv)
   radio.begin();
 
   // optionally, increase the delay between retries & # of retries
-  radio.setRetries(15,15);
+//  radio.setRetries(15,15);
 
   // optionally, reduce the payload size.  seems to
   // improve reliability
 	//  radio.setPayloadSize(8);
-	radio.setChannel(0x4c);
-  radio.setPALevel(RF24_PA_LOW);
+//	radio.setChannel(0x4c);
+  //radio.setPALevel(RF24_PA_LOW);
 
   //
   // Open pipes to other nodes for communication
@@ -122,6 +122,10 @@ int main(int argc, char** argv)
   //
   // Start listening
   //
+  radio.enableDynamicPayloads() ;
+  radio.setAutoAck( true ) ;
+  radio.powerUp() ;
+
   radio.startListening();
 
   //
