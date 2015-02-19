@@ -1,0 +1,6 @@
+*.o
+examples/pingtest
+examples/pongtest
+examples/scanner
+examples/rpi-hub
+librf24-bcm.*

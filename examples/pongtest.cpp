@@ -80,8 +80,6 @@ int main(int argc, char** argv)
   // Print preamble:
   //
 
-  //Serial.begin(115200);
-  //printf_begin();
   printf("RF24/examples/pongtest/\n");
   printf("ROLE: %s\n",role_friendly_name[role]);
 
@@ -95,9 +93,9 @@ int main(int argc, char** argv)
 
   // optionally, reduce the payload size.  seems to
   // improve reliability
-	//  radio.setPayloadSize(8);
-	radio.setChannel(0x4c);
-  radio.setPALevel(RF24_PA_LOW);
+//  radio.setPayloadSize(8);
+//	radio.setChannel(0x4c);
+//  radio.setPALevel(RF24_PA_LOW);
 
   //
   // Open pipes to other nodes for communication
@@ -121,6 +119,10 @@ int main(int argc, char** argv)
   //
   // Start listening
   //
+  radio.enableDynamicPayloads() ;
+  radio.setAutoAck( true ) ;
+  radio.powerUp() ;
+
   radio.startListening();
 
   //
