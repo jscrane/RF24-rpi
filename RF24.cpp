@@ -369,20 +369,20 @@ void RF24::printDetails(void)
 	printf("Clock Speed\t = " );
 	switch (spi_speed)
 	{
-		case BCM2835_SPI_SPEED_64MHZ : printf("64 Mhz");	break ;
-		case BCM2835_SPI_SPEED_32MHZ : printf("32 Mhz");	break ;
-		case BCM2835_SPI_SPEED_16MHZ : printf("16 Mhz");	break ;
-		case BCM2835_SPI_SPEED_8MHZ  : printf("8 Mhz");	break ;
-		case BCM2835_SPI_SPEED_4MHZ  : printf("4 Mhz");	break ;
-		case BCM2835_SPI_SPEED_2MHZ  : printf("2 Mhz");	break ;
-		case BCM2835_SPI_SPEED_1MHZ  : printf("1 Mhz");	break ;
-		case BCM2835_SPI_SPEED_512KHZ: printf("512 KHz");	break ;
-		case BCM2835_SPI_SPEED_256KHZ: printf("256 KHz");	break ;
-		case BCM2835_SPI_SPEED_128KHZ: printf("128 KHz");	break ;
-		case BCM2835_SPI_SPEED_64KHZ : printf("64 KHz");	break ;
-		case BCM2835_SPI_SPEED_32KHZ : printf("32 KHz");	break ;
-		case BCM2835_SPI_SPEED_16KHZ : printf("16 KHz");	break ;
-		case BCM2835_SPI_SPEED_8KHZ  : printf("8 KHz");	break ;
+		case BCM2835_SPI_CLOCK_DIVIDER_4: printf("64 Mhz");	break ;
+		case BCM2835_SPI_CLOCK_DIVIDER_8: printf("32 Mhz");	break ;
+		case BCM2835_SPI_CLOCK_DIVIDER_16: printf("16 Mhz");	break ;
+		case BCM2835_SPI_CLOCK_DIVIDER_32: printf("8 Mhz");	break ;
+		case BCM2835_SPI_CLOCK_DIVIDER_64: printf("4 Mhz");	break ;
+		case BCM2835_SPI_CLOCK_DIVIDER_128: printf("2 Mhz");	break ;
+		case BCM2835_SPI_CLOCK_DIVIDER_256: printf("1 Mhz");	break ;
+		case BCM2835_SPI_CLOCK_DIVIDER_512: printf("512 KHz");	break ;
+		case BCM2835_SPI_CLOCK_DIVIDER_1024: printf("256 KHz");	break ;
+		case BCM2835_SPI_CLOCK_DIVIDER_2048: printf("128 KHz");	break ;
+		case BCM2835_SPI_CLOCK_DIVIDER_4096: printf("64 KHz");	break ;
+		case BCM2835_SPI_CLOCK_DIVIDER_8192: printf("32 KHz");	break ;
+		case BCM2835_SPI_CLOCK_DIVIDER_16384: printf("16 KHz");	break ;
+		case BCM2835_SPI_CLOCK_DIVIDER_32768: printf("8 KHz");	break ;
 		default : printf("Probably Bad !!!");	break ;
 	}
 	printf("\n");
@@ -433,11 +433,12 @@ bool RF24::begin(void)
 	bcm2835_spi_setDataMode(BCM2835_SPI_MODE0); 
 
 	// Set SPI bus Speed
-	bcm2835_spi_setClockSpeed(spi_speed); 
+	bcm2835_spi_setClockDivider(spi_speed);
 	
 	// This initialize the SPI bus with 
 	// csn pin as chip select (custom or not)
-	bcm2835_spi_begin(csn_pin);
+	bcm2835_spi_chipSelect(csn_pin);
+	bcm2835_spi_begin();
 
   // wait 100ms
 	delay(100);
@@ -540,6 +541,14 @@ void RF24::powerUp(void)
 }
 
 /******************************************************************/
+
+// This function is added in order to simulate arduino millis() function
+unsigned millis(void)
+{
+	struct timeval now;
+	gettimeofday(&now, NULL);
+	return (now.tv_sec * 1000000 + now.tv_usec) / 1000 ;
+}
 
 bool RF24::write( const void* buf, uint8_t len )
 {
